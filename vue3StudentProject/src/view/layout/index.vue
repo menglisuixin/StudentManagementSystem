@@ -1,6 +1,5 @@
 <template>
-  <!-- 渲染出口 -->
-  <router-view></router-view>
+  <h1>布局组件</h1>
 </template>
 <script setup lang="ts"></script>
 <style scoped></style>
