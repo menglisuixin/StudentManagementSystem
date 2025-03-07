@@ -6,8 +6,8 @@ function createUserList() {
       {
         token: "Admin Token",
         _id: "641280fdc5ff3cb994002003",
-        username: "test1",
         name: "测试用户1",
+        username: "test1",
         password: "1234",
         phone: "13112345678",
         role_id: "640ec59a9f6e3402f8edd4ec",
