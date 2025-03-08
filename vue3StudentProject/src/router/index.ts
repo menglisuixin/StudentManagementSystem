@@ -20,7 +20,7 @@ let router = createRouter({
     {
       path: "/:pathMatch(.*)*",
       redirect: "/404",
-      name: "any",
+      name: "Any",
     },
   ],
 });

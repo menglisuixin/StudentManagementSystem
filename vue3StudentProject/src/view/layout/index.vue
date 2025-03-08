@@ -40,5 +40,4 @@ import appNavBar from "@/components/AppNavBar/index.vue";
   overflow-y: auto;
   background-color: #3c4b5a;
 }
-
 </style>

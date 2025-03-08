@@ -2,8 +2,8 @@ import axios from "axios";
 import { ElMessage } from "element-plus";
 
 let request = axios.create({
-  baseURL: "/mock",
-  //   baseURL: import.meta.env.VITE_APP_BASE_API,
+  // baseURL: "/mock",
+  baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 5000,
 });
 // 请求拦截器

@@ -6,7 +6,7 @@
     </a>
     <el-dropdown @command="handleCommand">
       <span class="el-dropdown-link">
-        admin
+        {{ userStore.user?.username }}
         <el-icon class="el-icon--right">
           <arrow-down />
         </el-icon>
@@ -24,6 +24,9 @@
 <script setup lang="ts">
 import { formateTime } from "@/utils/dateUtils";
 import { ref, onUnmounted } from "vue";
+import useUserStore from "@/store/modules/user";
+
+let userStore = useUserStore();
 let currentTime = ref<string>(formateTime(Date.now()));
 let timer = setInterval(function () {
   currentTime.value = formateTime(Date.now());

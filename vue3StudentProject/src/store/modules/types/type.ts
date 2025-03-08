@@ -1,3 +1,4 @@
+import type { userInfoData } from "@/api/user/type";
 export interface UserState {
-  token: string | null;
+  user: userInfoData | null;
 }
