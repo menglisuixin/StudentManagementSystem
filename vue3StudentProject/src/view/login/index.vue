@@ -25,7 +25,12 @@
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
+import useUserStore from "@/store/modules/user";
+import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 
+let $router = useRouter();
+let userStore = useUserStore();
 const ruleFormRef = ref<FormInstance>();
 
 const form = reactive({
@@ -69,11 +74,26 @@ let onSubmit = (formEl: FormInstance | undefined) => {
   if (!formEl) {
     return;
   }
-  formEl.validate((valid) => {
+  formEl.validate(async (valid) => {
     if (valid) {
-      console.log("success");
+      try {
+        await userStore.userLogin(form);
+        $router.push("/");
+        ElMessage({
+          type: "success",
+          message: "登录成功",
+        });
+      } catch (error) {
+        ElMessage({
+          type: "error",
+          message: (error as Error).message,
+        });
+      }
     } else {
-      console.log("error");
+      ElMessage({
+        type: "error",
+        message: "校验不通过",
+      });
     }
   });
 };
