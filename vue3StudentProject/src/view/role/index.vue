@@ -34,12 +34,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, nextTick } from "vue";
-import { ElTable } from "element-plus";
+import { ref, reactive, nextTick, onMounted } from "vue";
+import { ElMessage, ElTable } from "element-plus";
 import { formateDate } from "@/utils/dateUtils";
 import type { roleInfoData } from "@/api/role/type";
 import type { FormInstance, FormRules } from "element-plus";
+import useRoleStore from "@/store/modules/role";
 
+let roleStore = useRoleStore();
 const resetDate = (_row: any, _column: any, cellValue: any, _index: number) => {
   return formateDate(cellValue);
 };
@@ -59,7 +61,14 @@ let addData = (formEl: FormInstance | undefined) => {
   }
   formEl.validate(async (valid) => {
     if (valid) {
-      console.log(valid, 123);
+      roleStore.useAddRole(roleForm).then(() => {
+        dialogFormVisible.value = false;
+        getRoleList();
+        ElMessage({
+          type: "success",
+          message: `添加角色${roleForm.name}成功`,
+        });
+      });
     }
   });
 };
@@ -72,13 +81,7 @@ const roleFormRef = ref<FormInstance>();
 const handleCurrentChange = (val: any) => {
   currentRow.value = val;
 };
-const roleList = ref<roleInfoData[]>([
-  {
-    name: "教师",
-    create_time: 1741502941666,
-    __v: 1,
-  },
-]);
+const roleList = ref<roleInfoData[] | undefined>([]);
 // 添加角色
 let handleAdd = () => {
   dialogFormVisible.value = true;
@@ -86,4 +89,13 @@ let handleAdd = () => {
     roleFormRef.value?.resetFields();
   });
 };
+// 获取角色列表
+const getRoleList = () => {
+  roleStore.roleList().then(() => {
+    roleList.value = roleStore.roles;
+  });
+};
+onMounted(() => {
+  getRoleList();
+});
 </script>
