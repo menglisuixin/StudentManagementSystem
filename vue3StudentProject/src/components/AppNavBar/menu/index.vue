@@ -14,6 +14,7 @@
         <span>{{ item.title }}</span>
       </template>
     </el-menu-item>
+    <!-- 有子项显示 -->
     <el-sub-menu v-if="item.children" :index="item.index">
       <template #title>
         <el-icon>

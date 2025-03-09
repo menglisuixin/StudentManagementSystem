@@ -24,6 +24,10 @@ let useUserStore = defineStore("user", {
         return Promise.reject(new Error(result.msg));
       }
     },
+    removeUser() {
+      this.user = null;
+      localStorage.removeItem("D2402-user");
+    },
   },
 });
 export default useUserStore;

@@ -25,7 +25,9 @@
 import { formateTime } from "@/utils/dateUtils";
 import { ref, onUnmounted } from "vue";
 import useUserStore from "@/store/modules/user";
+import { useRouter } from "vue-router";
 
+let $router = useRouter();
 let userStore = useUserStore();
 let currentTime = ref<string>(formateTime(Date.now()));
 let timer = setInterval(function () {
@@ -40,10 +42,17 @@ const handleCommand = (command: string) => {
       console.log("修改密码");
       break;
     case "b":
-      console.log("退出系统");
+      // console.log("退出系统");
+      handleLogOut();
       break;
     default:
       break;
+  }
+};
+const handleLogOut = () => {
+  userStore.removeUser();
+  if (!userStore.user) {
+    $router.replace("/login");
   }
 };
 </script>

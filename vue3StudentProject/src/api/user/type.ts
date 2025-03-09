@@ -33,3 +33,15 @@ export interface userInfoData {
   __v?: number;
   role: userRoleData;
 }
+
+//校验
+export interface pwdData {
+  userId: string;
+  password: string;
+}
+// 校验的返回
+export interface checkPwdREsponseData {
+  status?: number;
+  data?: userInfoData;
+  msg?: string;
+}
