@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getRoleList, addRole } from "@/api/role/index";
+import { getRoleList, addRole, updateRole } from "@/api/role/index";
 import { RoleState } from "./types/type";
 import type {
   getRoleListResponseData,
@@ -25,6 +25,14 @@ let useRoleStore = defineStore("role", {
     },
     async useAddRole(data: roleInfoData) {
       let result: addRoleResponseData = await addRole(data);
+      if (result.status == 0) {
+        return "OK";
+      } else {
+        return Promise.reject(new Error(result.msg));
+      }
+    },
+    async useUpdateRole(data: roleInfoData) {
+      let result: addRoleResponseData = await updateRole(data);
       if (result.status == 0) {
         return "OK";
       } else {
