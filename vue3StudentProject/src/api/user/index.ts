@@ -5,7 +5,6 @@ import type {
   loginResponseData,
   pwdData,
   checkPwdREsponseData,
-  userInfoData,
 } from "./type";
 // 枚举类型
 enum API {

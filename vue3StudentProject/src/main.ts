@@ -8,6 +8,7 @@ import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import router from "./router";
 import "@/assets/index.css";
 import pinia from "./store";
+import "./permission";
 const app = createApp(App);
 app.use(ElementPlus, {
   locale: zhCn,
