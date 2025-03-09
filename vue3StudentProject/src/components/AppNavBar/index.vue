@@ -5,8 +5,9 @@
       background-color="#545c64"
       class="el-menu-vertical-demo"
       text-color="#fff"
-      :default-openeds="[4]"
-      default-active="2"
+      :default-openeds="['/students']"
+      :default-active="$route.path"
+      :router="true"
     >
       <Menu :menuList="menuNodes" />
     </el-menu>
@@ -17,10 +18,10 @@ import Menu from "./menu/index.vue";
 import menuList from "@/config/menuConfig";
 import type { MenuData, MenuChildData } from "./types/type";
 import useUserStore from "@/store/modules/user";
-// import { useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 
 let userStore = useUserStore();
-// let $route = useRoute();
+let $route = useRoute();
 let menuNodes: any[] = [];
 const hashAuth = (item: MenuData) => {
   const { index, isPublic } = item;

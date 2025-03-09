@@ -38,6 +38,6 @@ import appNavBar from "@/components/AppNavBar/index.vue";
   bottom: 0;
   padding: 10px;
   overflow-y: auto;
-  background-color: #3c4b5a;
+  /* background-color: #3c4b5a; */
 }
 </style>
