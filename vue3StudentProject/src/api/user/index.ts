@@ -5,6 +5,9 @@ import type {
   loginResponseData,
   pwdData,
   checkPwdREsponseData,
+  userAllResponseData,
+  userListFormData,
+  userListResponseData,
 } from "./type";
 // 枚举类型
 enum API {
@@ -12,6 +15,8 @@ enum API {
   LOGOUT_URL = "/logout",
   CHECK_PWD_URL = "/manage/user/pwd",
   UPDATE_PWD_URL = "/manage/user/pwd",
+  USER_ALL_URL = "/manage/user/all",
+  USER_LIST_URL = "/manage/user/list",
 }
 //登录
 export const reqLogin = (data: loginFormData) => {
@@ -25,3 +30,7 @@ export const reqCheckPwd = (data: pwdData) =>
   request.post<any, checkPwdREsponseData>(API.CHECK_PWD_URL, data);
 export const reqUpdatePwd = (data: pwdData) =>
   request.put<any, checkPwdREsponseData>(API.CHECK_PWD_URL, data);
+export const reqUserAll = () =>
+  request.get<any, userAllResponseData>(API.USER_ALL_URL);
+export const reqUserList = (data: userListFormData) =>
+  request.post<any, userListResponseData>(API.USER_LIST_URL, data);

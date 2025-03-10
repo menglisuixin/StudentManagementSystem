@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="usersList" style="width: 100%; height: 380px">
+  <el-table :data="users" style="width: 100%; height: 380px">
     <el-table-column type="index" width="60" label="序号" align="center" />
     <el-table-column property="username" label="用户名称" align="center" />
     <el-table-column property="name" label="真实姓名" align="center" />
@@ -23,31 +23,34 @@
       </template>
     </el-table-column>
   </el-table>
+  <el-pagination
+    v-model:current-page="currentPage"
+    v-model:page-size="pageSize"
+    :page-sizes="[5, 10, 15, 20]"
+    layout="total,sizes, prev, pager, next, jumper"
+    :total="total"
+    @size-change="handleSizeChange"
+    @current-change="handleCurrentChange"
+    style="display: flex; justify-content: center; align-items: center"
+  />
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { formateDate } from "@/utils/dateUtils";
 import useRoleStore from "@/store/modules/role";
 import { roleInfoData } from "@/api/role/type";
+import useUserStore from "@/store/modules/user";
+import type { userInfoData } from "@/api/user/type";
 let roleStore = useRoleStore();
-const usersList = ref([
-  {
-    _id: "1",
-    username: "测试",
-    name: "老王",
-    phone: "13351911273",
-    create_time: 1741579509119,
-    role_id: "67860eb8473a16da1fdcb8dd",
-  },
-  {
-    _id: "1",
-    username: "测试",
-    name: "小张",
-    phone: "13351911273",
-    create_time: 1741579509119,
-    role_id: "67860eb8473a16da1fdcb8dd",
-  },
-]);
+let userStore = useUserStore();
+const users = ref<userInfoData[] | undefined>();
+
+const getUserList = () => {
+  userStore.getUserList({ page: currentPage.value, size: pageSize.value }).then((res) => {
+    users.value = userStore.users;
+    total.value = res?.total as number;
+  });
+};
 let roleOptions = ref<roleInfoData[] | undefined>([]);
 const getRoleList = () => {
   if (roleStore.roles?.length) {
@@ -73,6 +76,17 @@ let handleDelete = (_id: string) => {
 };
 onMounted(() => {
   getRoleList();
+  getUserList();
 });
+// 分页
+let currentPage = ref(1);
+let pageSize = ref(5);
+let total = ref(0);
+let handleSizeChange = (val: number) => {
+  console.log(val, "1111");
+};
+let handleCurrentChange = (val: number) => {
+  console.log(val, "22222");
+};
 </script>
 <style scoped></style>

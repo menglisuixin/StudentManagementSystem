@@ -1,9 +1,12 @@
 import { defineStore } from "pinia";
-import { reqLogin } from "@/api/user";
+import { reqLogin, reqUserAll, reqUserList } from "@/api/user";
 import type {
   loginFormData,
   loginResponseData,
+  userAllResponseData,
   userInfoData,
+  userListFormData,
+  userListResponseData,
 } from "@/api/user/type";
 import type { UserState } from "./types/type";
 
@@ -11,6 +14,7 @@ let useUserStore = defineStore("user", {
   state: (): UserState => {
     return {
       user: JSON.parse(localStorage.getItem("D2402-user") as string),
+      users: [],
     };
   },
   actions: {
@@ -27,6 +31,25 @@ let useUserStore = defineStore("user", {
     removeUser() {
       this.user = null;
       localStorage.removeItem("D2402-user");
+    },
+    // 获取所有用户
+    async getUserAll() {
+      let result: userAllResponseData = await reqUserAll();
+      if (result.status == 0) {
+        this.users = result.data as userInfoData[];
+        return "OK";
+      } else {
+        return Promise.reject(new Error(result.msg));
+      }
+    },
+    async getUserList(data: userListFormData) {
+      let result: userListResponseData = await reqUserList(data);
+      if (result.status == 0) {
+        this.users = result.data?.data as userInfoData[];
+        return result.data;
+      } else {
+        return Promise.reject(new Error(result.msg));
+      }
     },
   },
 });

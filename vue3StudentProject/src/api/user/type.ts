@@ -45,3 +45,26 @@ export interface checkPwdREsponseData {
   data?: userInfoData;
   msg?: string;
 }
+// 获取用户列表接口需要携带参数ts类型
+export interface userListFormData {
+  page: number;
+  size: number;
+}
+// 获取所有用户接口返回数据类型
+export interface userAllResponseData {
+  status: number;
+  data?: userInfoData[];
+  msg?: string;
+}
+// 获取用户列表接口返回数据类型
+export interface userListResponseData {
+  status: number;
+  data?: userListData;
+  msg?: string;
+}
+// 用户列表data数据类型
+export interface userListData {
+  data: userInfoData[];
+  roles: [];
+  total: number;
+}
