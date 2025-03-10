@@ -1,4 +1,7 @@
 <template>
+  <div style="margin: 20px 0">
+    <el-button @click="handleAdd">新增用户</el-button>
+  </div>
   <el-table :data="users" style="width: 100%; height: 380px">
     <el-table-column type="index" width="60" label="序号" align="center" />
     <el-table-column property="username" label="用户名称" align="center" />
@@ -33,14 +36,50 @@
     @current-change="handleCurrentChange"
     style="display: flex; justify-content: center; align-items: center"
   />
+  <!-- 弹出对话框 -->
+  <el-dialog v-model="userFormVisible" title="添加用户" width="500">
+    <el-form :model="user" :rules="rules" ref="userFormRef" label-width="90px">
+      <el-form-item label="用户名称" prop="username">
+        <el-input v-model="user.username" />
+      </el-form-item>
+      <el-form-item label="用户密码" prop="password">
+        <el-input v-model="user.password" />
+      </el-form-item>
+      <el-form-item label="真实姓名" prop="name">
+        <el-input v-model="user.name" />
+      </el-form-item>
+      <el-form-item label="角色类型" prop="role_id">
+        <el-select v-model="user.role_id" placeholder="点击选择">
+          <el-option
+            v-for="item in roleOptions"
+            :key="item._id"
+            :label="item.name"
+            :value="item._id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="手机号码" prop="phone">
+        <el-input v-model="user.phone" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="addData(userFormRef)">确定</el-button>
+        <el-button @click="userFormVisible = false">取消</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { formateDate } from "@/utils/dateUtils";
 import useRoleStore from "@/store/modules/role";
 import { roleInfoData } from "@/api/role/type";
 import useUserStore from "@/store/modules/user";
 import type { userInfoData } from "@/api/user/type";
+import type { FormInstance, FormRules } from "element-plus";
+import { nextTick } from "vue";
+
 let roleStore = useRoleStore();
 let userStore = useUserStore();
 const users = ref<userInfoData[] | undefined>();
@@ -83,10 +122,119 @@ let currentPage = ref(1);
 let pageSize = ref(5);
 let total = ref(0);
 let handleSizeChange = (val: number) => {
-  console.log(val, "1111");
+  pageSize.value = val;
+  getUserList();
 };
 let handleCurrentChange = (val: number) => {
-  console.log(val, "22222");
+  currentPage.value = val;
+  getUserList();
+};
+let userFormVisible = ref(false);
+let user = ref<userInfoData>({
+  _id: null,
+  username: "",
+  password: "",
+  phone: "",
+  name: "",
+  role_id: "",
+});
+const userFormRef = ref<FormInstance>();
+let validateUserName = (_rule: any, value: any, callback: any) => {
+  value = value.trim();
+  const length = value && value.length;
+  const pwdReg = /^[A-z0-9_]+$/;
+  if (value == "") {
+    callback(new Error("请输入账号"));
+  } else if (length < 4 || length > 12) {
+    callback(new Error("长度必须在4-12之间"));
+  } else if (!pwdReg.test(value)) {
+    callback(new Error("必须是数字字母下划线组成"));
+  } else {
+    callback();
+  }
+};
+let validatePhone = (_rule: any, value: any, callback: any) => {
+  value = value.trim();
+  const pwdReg = /^(\+\d{1,3})?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/;
+  if (value == "") {
+    callback(new Error("请输入手机号"));
+  } else if (!pwdReg.test(value)) {
+    callback(new Error("请输入正确的手机号"));
+  } else {
+    callback();
+  }
+};
+let rules = reactive<FormRules>({
+  username: [
+    {
+      required: true,
+      validator: validateUserName,
+      trigger: ["change", "blur"],
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: "请输入密码",
+      trigger: "blur",
+    },
+    {
+      min: 3,
+      message: "密码长度必须大于3",
+      trigger: "blur",
+    },
+  ],
+  name: [
+    {
+      required: true,
+      message: "请输入姓名",
+      trigger: ["blur"],
+    },
+  ],
+  role_id: [
+    {
+      required: true,
+      message: "请选择角色",
+      trigger: ["blur"],
+    },
+  ],
+  phone: [
+    {
+      required: true,
+      validator: validatePhone,
+      trigger: ["blur"],
+    },
+  ],
+});
+let addData = (formEl: FormInstance | undefined) => {
+  if (!formEl) {
+    return;
+  }
+  formEl.validate(async (valid) => {
+    if (valid) {
+      try {
+        userStore.addUser(user.value).then(() => {
+          userFormVisible.value = false;
+          getUserList();
+        });
+      } catch (error) {}
+    } else {
+    }
+  });
+};
+let handleAdd = () => {
+  user.value = {
+    _id: null,
+    username: "",
+    password: "",
+    phone: "",
+    name: "",
+    role_id: "",
+  };
+  userFormVisible.value = true;
+  nextTick(() => {
+    userFormRef.value?.resetFields();
+  });
 };
 </script>
 <style scoped></style>

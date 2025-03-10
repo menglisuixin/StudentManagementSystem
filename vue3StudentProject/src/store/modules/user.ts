@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { reqLogin, reqUserAll, reqUserList } from "@/api/user";
+import { reqLogin, reqUserAdd, reqUserAll, reqUserList } from "@/api/user";
 import type {
   loginFormData,
   loginResponseData,
@@ -47,6 +47,14 @@ let useUserStore = defineStore("user", {
       if (result.status == 0) {
         this.users = result.data?.data as userInfoData[];
         return result.data;
+      } else {
+        return Promise.reject(new Error(result.msg));
+      }
+    },
+    async addUser(data: userInfoData) {
+      let result: loginResponseData = await reqUserAdd(data);
+      if (result.status == 0) {
+        return "OK";
       } else {
         return Promise.reject(new Error(result.msg));
       }

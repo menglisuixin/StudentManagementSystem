@@ -23,15 +23,15 @@ interface userRoleData {
 // 服务器返回用户信息中data选项的数据类型
 export interface userInfoData {
   token?: string;
-  _id?: string;
+  _id?: string | null;
   username: string;
   name?: string;
   password: string;
   phone?: string;
   role_id?: string;
-  create_time: number;
+  create_time?: number;
   __v?: number;
-  role: userRoleData;
+  role?: userRoleData;
 }
 
 //校验
