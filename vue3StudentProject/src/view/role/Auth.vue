@@ -45,9 +45,22 @@ let rules = reactive<FormRules>({
   ],
 });
 let authList = ref([]);
-let checkedKeys = reactive([]);
-let handleCheckChange = () => {};
+let checkedKeys: any = reactive([]);
 
+let handleCheckChange = (data: tree, checked: boolean) => {
+  if (checked) {
+    if (data.index !== "/students" && checkedKeys.indexOf(data.index) == -1) {
+      checkedKeys.push(data.index);
+    }
+  } else {
+    if (checkedKeys.indexOf(data.index) != -1) {
+      checkedKeys.splice(checkedKeys.indexOf(data.index), 1);
+    }
+  }
+};
+interface tree {
+  index: string;
+}
 let getMenus = () => {
   updateRole.menus = checkedKeys;
   return updateRole;

@@ -16,11 +16,26 @@
     border
     height="380"
   >
-    <el-table-column type="index" width="60" label="序号" />
-    <el-table-column property="name" label="角色名称" />
-    <el-table-column property="create_time" label="创建时间" :formatter="resetDate" />
-    <el-table-column property="auth_time" label="授权时间" :formatter="resetDate" />
-    <el-table-column property="auth_name" label="授权人" />
+    <el-table-column type="index" width="60" label="序号" align="center" />
+    <el-table-column property="name" label="角色名称" align="center" />
+    <el-table-column
+      property="create_time"
+      label="创建时间"
+      :formatter="resetDate"
+      align="center"
+    />
+    <el-table-column
+      property="auth_time"
+      label="授权时间"
+      :formatter="resetDate"
+      align="center"
+    />
+    <el-table-column property="auth_name" label="授权人" align="center" />
+    <el-table-column fixed="right" label="操作" width="100" align="center">
+      <template #default="scope">
+        <el-button link @click.prevent="deleteData(scope.$index)"> 删除 </el-button>
+      </template>
+    </el-table-column>
   </el-table>
   <el-dialog v-model="dialogFormVisible" title="添加角色" width="500">
     <el-form :model="roleForm" ref="roleFormRef" :rules="rules">
@@ -55,7 +70,7 @@ import type { FormInstance, FormRules } from "element-plus";
 import useRoleStore from "@/store/modules/role";
 import Auth from "./Auth.vue";
 
-// import useUserStore from "@/store/modules/user";
+import useUserStore from "@/store/modules/user";
 
 let roleStore = useRoleStore();
 const resetDate = (_row: any, _column: any, cellValue: any, _index: number) => {
@@ -89,6 +104,27 @@ let addData = (formEl: FormInstance | undefined) => {
     }
   });
 };
+// 删除角色 -- 自填
+let deleteData = (index: number) => {
+  if (roleList.value && roleList.value.length > index) {
+    const roleToDelete = roleList.value[index];
+    roleStore
+      .useDeleteRole(roleToDelete)
+      .then(() => {
+        getRoleList();
+        ElMessage({
+          type: "success",
+          message: `删除角色${roleToDelete.name}成功`,
+        });
+      })
+      .catch((error) => {
+        ElMessage({
+          type: "error",
+          message: `删除角色失败: ${error.message}`,
+        });
+      });
+  }
+};
 // 表单校验
 let rules = reactive<FormRules>({
   name: [{ required: true, message: "请输入角色名称", trigger: ["blur"] }],
@@ -103,15 +139,20 @@ const handleCurrentChange = (val: any) => {
 //控制添加权限的变量
 let roleAuthVisible = ref(false);
 // 用户仓库
-// let userStore = useUserStore();
+let userStore = useUserStore();
 let authRef = ref();
 // 更新角色权限
 let updateData = () => {
   // console.log("updateData");
   const newRole = authRef.value.getMenus();
-  console.log(newRole);
-  // 关闭设置权限的弹出框
-  roleAuthVisible.value = false;
+  currentRow.value.menus = newRole.menus;
+  currentRow.value.name = newRole.name;
+  currentRow.value.auth_name = userStore.user?.username;
+  roleStore.useUpdateRole(currentRow.value).then(() => {
+    roleAuthVisible.value = false;
+    getRoleList();
+  });
+  // console.log(newRole);
   // 取消选择当前行
   if (singleTableRef.value) {
     singleTableRef.value.setCurrentRow();

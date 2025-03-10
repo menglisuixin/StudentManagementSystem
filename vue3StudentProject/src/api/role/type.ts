@@ -20,3 +20,8 @@ export interface addRoleResponseData {
   data?: roleInfoData;
   msg?: string;
 }
+export interface deleteRoleResponseData {
+  status: number;
+  data?: roleInfoData;
+  msg?: string;
+}
