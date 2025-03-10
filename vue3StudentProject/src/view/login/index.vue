@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import useUserStore from "@/store/modules/user";
 import { useRouter } from "vue-router";
@@ -97,6 +97,17 @@ let onSubmit = (formEl: FormInstance | undefined) => {
     }
   });
 };
+onMounted(() => {
+  const msg = localStorage.getItem("msg");
+
+  if (msg) {
+    ElMessage({
+      type: "warning",
+      message: msg,
+    });
+    localStorage.removeItem("msg");
+  }
+});
 </script>
 <style scoped>
 .login-container {

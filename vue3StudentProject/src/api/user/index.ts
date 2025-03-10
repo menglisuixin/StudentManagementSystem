@@ -19,6 +19,9 @@ enum API {
   USER_ALL_URL = "/manage/user/all",
   USER_LIST_URL = "/manage/user/list",
   USER_ADD_URL = "/manage/user/add",
+  USER_GET_ID_URL = "/manage/user/find",
+  USER_UPDATE_URL = "/manage/user/update",
+  USER_DELETE_URL = "/manage/user/delete",
 }
 //登录
 export const reqLogin = (data: loginFormData) => {
@@ -38,3 +41,9 @@ export const reqUserList = (data: userListFormData) =>
   request.post<any, userListResponseData>(API.USER_LIST_URL, data);
 export const reqUserAdd = (data: userInfoData) =>
   request.post<any, loginResponseData>(API.USER_ADD_URL, data);
+export const reqUserById = (_id: string) =>
+  request.get<any, loginResponseData>(API.USER_GET_ID_URL + `?_id=${_id}`);
+export const reqUserUpdate = (data: userInfoData) =>
+  request.post<any, loginResponseData>(API.USER_UPDATE_URL, data);
+export const reqUserDelete = (userId: string) =>
+  request.post<any, loginResponseData>(API.USER_DELETE_URL, { userId });

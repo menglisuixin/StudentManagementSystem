@@ -1,13 +1,59 @@
 import axios from "axios";
 import { ElMessage } from "element-plus";
+import useUserStore from "@/store/modules/user";
 
 let request = axios.create({
   // baseURL: "/mock",
   baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 5000,
 });
+function msgText() {
+  let userStore = useUserStore();
+  const msg = "当前用户权限被修改请重新登录";
+  localStorage.setItem("msg", msg);
+  userStore.removeUser();
+  if (!userStore.user) {
+    window.location.href = "/login";
+  }
+}
+// 获取权限列表
+const getMenus = () => {
+  let userStore = useUserStore();
+  // 拿到当前登录人的角色
+  const roleId = userStore.user?.role?._id;
+  // 拿到当前登录人的权限列表
+  const userMenus = userStore.user?.role?.menus;
+  if (userStore.user?.username == "admin") {
+    return;
+  } else {
+    request({
+      url: "/menus",
+      method: "post",
+      data: {
+        roleId,
+      },
+    }).then((res) => {
+      if (res.status == 0) {
+        const menus = res.data.menus;
+        if (userMenus?.length == menus.length) {
+          userMenus?.forEach((item) => {
+            if (menus.indexOf(item) == -1) {
+              msgText();
+            }
+          });
+        } else {
+          userStore.removeUser();
+          msgText();
+        }
+      }
+    });
+  }
+};
 // 请求拦截器
 request.interceptors.request.use((config) => {
+  if (config.url != "/menus" && config.url != "/login") {
+    getMenus();
+  }
   return config;
 });
 // 响应拦截器
@@ -42,4 +88,5 @@ request.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 export default request;

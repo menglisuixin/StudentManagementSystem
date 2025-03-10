@@ -1,5 +1,13 @@
 import { defineStore } from "pinia";
-import { reqLogin, reqUserAdd, reqUserAll, reqUserList } from "@/api/user";
+import {
+  reqLogin,
+  reqUserAdd,
+  reqUserAll,
+  reqUserById,
+  reqUserDelete,
+  reqUserList,
+  reqUserUpdate,
+} from "@/api/user";
 import type {
   loginFormData,
   loginResponseData,
@@ -53,6 +61,30 @@ let useUserStore = defineStore("user", {
     },
     async addUser(data: userInfoData) {
       let result: loginResponseData = await reqUserAdd(data);
+      if (result.status == 0) {
+        return "OK";
+      } else {
+        return Promise.reject(new Error(result.msg));
+      }
+    },
+    async getUserById(_id: string) {
+      let result: loginResponseData = await reqUserById(_id);
+      if (result.status == 0) {
+        return result.data;
+      } else {
+        return Promise.reject(new Error(result.msg));
+      }
+    },
+    async updateUser(data: userInfoData) {
+      let result: loginResponseData = await reqUserUpdate(data);
+      if (result.status == 0) {
+        return "OK";
+      } else {
+        return Promise.reject(new Error(result.msg));
+      }
+    },
+    async deleteUser(userId: string) {
+      let result: loginResponseData = await reqUserDelete(userId);
       if (result.status == 0) {
         return "OK";
       } else {

@@ -64,7 +64,10 @@
     </el-form>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="addData(userFormRef)">确定</el-button>
+        <el-button
+          @click="user._id == null ? addData(userFormRef) : updateData(userFormRef)"
+          >确定</el-button
+        >
         <el-button @click="userFormVisible = false">取消</el-button>
       </div>
     </template>
@@ -77,7 +80,7 @@ import useRoleStore from "@/store/modules/role";
 import { roleInfoData } from "@/api/role/type";
 import useUserStore from "@/store/modules/user";
 import type { userInfoData } from "@/api/user/type";
-import type { FormInstance, FormRules } from "element-plus";
+import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus";
 import { nextTick } from "vue";
 
 let roleStore = useRoleStore();
@@ -108,10 +111,43 @@ const resetRole = (_row: any, _column: any, cellValue: any, _index: number) => {
   return role.name;
 };
 let handleEdit = (_id: string) => {
-  console.log(_id);
+  handleAdd();
+  userStore.getUserById(_id).then((res) => {
+    console.log(res);
+    user.value = res as userInfoData;
+  });
+  // console.log(_id);
+};
+let updateData = (formEl: FormInstance | undefined) => {
+  if (!formEl) {
+    return;
+  }
+  formEl.validate(async (valid) => {
+    if (valid) {
+      userStore.updateUser(user.value).then(() => {
+        userFormVisible.value = false;
+        getUserList();
+      });
+    } else {
+    }
+  });
 };
 let handleDelete = (_id: string) => {
-  console.log(_id);
+  // console.log(_id);
+  ElMessageBox.confirm("你确定删除吗", "Warning", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(() => {
+      userStore.deleteUser(_id).then(() => {
+        ElMessage({
+          type: "success",
+          message: "删除成功",
+        });
+        getUserList();
+      });
+    })
 };
 onMounted(() => {
   getRoleList();
