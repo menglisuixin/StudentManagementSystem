@@ -65,7 +65,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button
-          @click="user._id == null ? addData(userFormRef) : updateData(userFormRef)"
+          @click="user._id == undefined ? addData(userFormRef) : updateData(userFormRef)"
           >确定</el-button
         >
         <el-button @click="userFormVisible = false">取消</el-button>
@@ -167,7 +167,7 @@ let handleCurrentChange = (val: number) => {
 };
 let userFormVisible = ref(false);
 let user = ref<userInfoData>({
-  _id: null,
+  _id: undefined,
   username: "",
   password: "",
   phone: "",
@@ -260,7 +260,7 @@ let addData = (formEl: FormInstance | undefined) => {
 };
 let handleAdd = () => {
   user.value = {
-    _id: null,
+    _id: undefined,
     username: "",
     password: "",
     phone: "",
