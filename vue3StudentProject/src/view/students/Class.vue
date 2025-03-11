@@ -178,11 +178,7 @@ let handleDelete = (_id: string) => {
       });
     });
 };
-onMounted(() => {
-  getRoleList();
-  getUserList();
-  getClassList();
-});
+
 let addData = (formEL: FormInstance | undefined) => {
   if (!formEL) {
     return;
@@ -219,9 +215,37 @@ let userStore = useUserStore();
 let roleStore = useRoleStore();
 let roleOptions = ref<roleInfoData[] | undefined>([]);
 let userOptions = ref<userInfoData[] | undefined>([]);
-const getUserList = () => {
-  if (userStore.users?.length) {
+// const getUserList = () => {
+//   userStore.getUserAll().then(() => {
+//     userOptions.value = userStore.users;
+//     userOptions.value.forEach((item) => {
+//       if (item.role_id == teacher_role_id.value) {
+//         teacherOptions.value?.push(item);
+//       } else if (item.role_id == manager_role_id.value) {
+//         managerOptions.value?.push(item);
+//       }
+//     });
+//   });
+// };
+/* */
+// const getRoleList = () => {
+//   roleStore.roleList().then(() => {
+//     roleOptions.value = roleStore.roles;
+//     roleOptions.value?.forEach((item) => {
+//       if (item.name == "教师") {
+//         teacher_role_id.value = item._id;
+//       } else if (item.name == "学管") {
+//         manager_role_id.value = item._id;
+//       }
+//     });
+//   });
+// };
+const getUserList = async () => {
+  try {
+    await userStore.getUserAll();
     userOptions.value = userStore.users;
+    teacherOptions.value = [];
+    managerOptions.value = [];
     userOptions.value.forEach((item) => {
       if (item.role_id == teacher_role_id.value) {
         teacherOptions.value?.push(item);
@@ -229,46 +253,33 @@ const getUserList = () => {
         managerOptions.value?.push(item);
       }
     });
-  } else {
-    userStore.getUserAll().then(() => {
-      userOptions.value = userStore.users;
-      userOptions.value.forEach((item) => {
-        if (item.role_id == teacher_role_id.value) {
-          teacherOptions.value?.push(item);
-        } else if (item.role_id == manager_role_id.value) {
-          managerOptions.value?.push(item);
-        }
-      });
-    });
+  } catch (error) {
+    console.error("获取用户列表失败", error);
   }
 };
-const getRoleList = () => {
-  if (roleStore.roles?.length) {
+const getRoleList = async () => {
+  try {
+    await roleStore.roleList();
     roleOptions.value = roleStore.roles;
-    roleOptions.value.forEach((item) => {
+    roleOptions.value?.forEach((item) => {
       if (item.name == "教师") {
         teacher_role_id.value = item._id;
       } else if (item.name == "学管") {
         manager_role_id.value = item._id;
       }
     });
-  } else {
-    roleStore.roleList().then(() => {
-      roleOptions.value = roleStore.roles;
-      roleOptions.value?.forEach((item) => {
-        if (item.name == "教师") {
-          teacher_role_id.value = item._id;
-        } else if (item.name == "学管") {
-          manager_role_id.value = item._id;
-        }
-      });
-    });
+  } catch (error) {
+    console.error("获取角色列表失败", error);
   }
 };
 const resetTeacher = (_row: any, _column: any, cellValue: any, _index: any) => {
+  console.log(cellValue, teacherOptions.value, "====");
+
   let teacher = teacherOptions.value?.find((item) => item._id == cellValue) || {
     name: "",
   };
+  console.log(teacher);
+
   return teacher.name;
 };
 const resetManager = (_row: any, _column: any, cellValue: any, _index: any) => {
@@ -292,5 +303,11 @@ let searchData = () => {
   currentPage.value = 1;
   getClassList();
 };
+
+onMounted(async () => {
+  await getRoleList();
+  await getUserList();
+  getClassList();
+});
 </script>
 <style scoped></style>
