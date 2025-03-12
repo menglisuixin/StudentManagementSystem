@@ -45,7 +45,7 @@ let useUserStore = defineStore("user", {
       let result: userAllResponseData = await reqUserAll();
       if (result.status == 0) {
         this.users = result.data as userInfoData[];
-        console.log(this.users);
+        // console.log(this.users);
 
         return "OK";
       } else {

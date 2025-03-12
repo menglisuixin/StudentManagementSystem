@@ -3,6 +3,7 @@ import type { roleInfoData } from "@/api/role/type";
 import type { schoolInfoData } from "@/api/school/type";
 import type { majorInfoData } from "@/api/major/type";
 import type { classInfoData } from "@/api/class/type";
+import type { studentInfoData } from "@/api/student/type";
 export interface UserState {
   user: userInfoData | null;
   users: userInfoData[];
@@ -18,4 +19,7 @@ export interface MajorState {
 }
 export interface ClassState {
   classes: classInfoData[] | undefined;
+}
+export interface StudentsState {
+  students: studentInfoData[] | undefined;
 }

@@ -49,6 +49,11 @@ let router = createRouter({
           component: () => import("@/view/students/Majors.vue"),
           meta: { title: "专业管理" },
         },
+        {
+          path: "/student/update/:id",
+          component: () => import("@/view/students/components/StudentUpdate.vue"),
+          meta: { title: "学生添加/编辑" },
+        },
       ],
     },
     {

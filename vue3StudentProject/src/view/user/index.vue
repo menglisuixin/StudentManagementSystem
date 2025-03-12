@@ -21,8 +21,12 @@
     />
     <el-table-column label="操作" align="center">
       <template #default="scope">
-        <el-button type="success" @click="handleEdit(scope.row._id)"> 编辑 </el-button>
-        <el-button type="danger" @click="handleDelete(scope.row._id)"> 删除 </el-button>
+        <el-button type="success" @click="handleEdit(scope.row._id)">
+          编辑
+        </el-button>
+        <el-button type="danger" @click="handleDelete(scope.row._id)">
+          删除
+        </el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -65,7 +69,11 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button
-          @click="user._id == undefined ? addData(userFormRef) : updateData(userFormRef)"
+          @click="
+            user._id == undefined
+              ? addData(userFormRef)
+              : updateData(userFormRef)
+          "
           >确定</el-button
         >
         <el-button @click="userFormVisible = false">取消</el-button>
@@ -80,7 +88,12 @@ import useRoleStore from "@/store/modules/role";
 import { roleInfoData } from "@/api/role/type";
 import useUserStore from "@/store/modules/user";
 import type { userInfoData } from "@/api/user/type";
-import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus";
+import {
+  ElMessage,
+  ElMessageBox,
+  type FormInstance,
+  type FormRules,
+} from "element-plus";
 import { nextTick } from "vue";
 
 let roleStore = useRoleStore();
@@ -88,10 +101,12 @@ let userStore = useUserStore();
 const users = ref<userInfoData[] | undefined>();
 
 const getUserList = () => {
-  userStore.getUserList({ page: currentPage.value, size: pageSize.value }).then((res) => {
-    users.value = userStore.users;
-    total.value = res?.total as number;
-  });
+  userStore
+    .getUserList({ page: currentPage.value, size: pageSize.value })
+    .then((res) => {
+      users.value = userStore.users;
+      total.value = res?.total as number;
+    });
 };
 let roleOptions = ref<roleInfoData[] | undefined>([]);
 const getRoleList = () => {
@@ -107,7 +122,9 @@ const resetDate = (_row: any, _column: any, cellValue: any, _index: number) => {
   return formateDate(cellValue);
 };
 const resetRole = (_row: any, _column: any, cellValue: any, _index: number) => {
-  let role = roleOptions.value?.find((item) => item._id == cellValue) || { name: "" };
+  let role = roleOptions.value?.find((item) => item._id == cellValue) || {
+    name: "",
+  };
   return role.name;
 };
 let handleEdit = (_id: string) => {
@@ -138,16 +155,15 @@ let handleDelete = (_id: string) => {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
-  })
-    .then(() => {
-      userStore.deleteUser(_id).then(() => {
-        ElMessage({
-          type: "success",
-          message: "删除成功",
-        });
-        getUserList();
+  }).then(() => {
+    userStore.deleteUser(_id).then(() => {
+      ElMessage({
+        type: "success",
+        message: "删除成功",
       });
-    })
+      getUserList();
+    });
+  });
 };
 onMounted(() => {
   getRoleList();
@@ -191,7 +207,8 @@ let validateUserName = (_rule: any, value: any, callback: any) => {
 };
 let validatePhone = (_rule: any, value: any, callback: any) => {
   value = value.trim();
-  const pwdReg = /^(\+\d{1,3})?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/;
+  const pwdReg =
+    /^(\+\d{1,3})?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/;
   if (value == "") {
     callback(new Error("请输入手机号"));
   } else if (!pwdReg.test(value)) {
