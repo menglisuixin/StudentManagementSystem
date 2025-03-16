@@ -33,7 +33,9 @@
     <el-table-column property="auth_name" label="授权人" align="center" />
     <el-table-column fixed="right" label="操作" width="100" align="center">
       <template #default="scope">
-        <el-button link @click.prevent="deleteData(scope.$index)"> 删除 </el-button>
+        <el-button link @click.prevent="deleteData(scope.$index)">
+          删除
+        </el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -69,7 +71,6 @@ import type { roleInfoData } from "@/api/role/type";
 import type { FormInstance, FormRules } from "element-plus";
 import useRoleStore from "@/store/modules/role";
 import Auth from "./Auth.vue";
-
 import useUserStore from "@/store/modules/user";
 
 let roleStore = useRoleStore();
@@ -100,6 +101,7 @@ let addData = (formEl: FormInstance | undefined) => {
           type: "success",
           message: `添加角色${roleForm.name}成功`,
         });
+        // open();
       });
     }
   });
@@ -173,6 +175,28 @@ const getRoleList = () => {
     roleList.value = roleStore.roles;
   });
 };
+// const open = () => {
+//   ElMessageBox.confirm(
+//     "是否为当前角色添加权限",
+//     {
+//     confirmButtonText: "确认",
+//     cancelButtonText: "稍后设置",
+//     callback: (action: Action) => {
+//       ElMessage({
+//         type: "info",
+//         message: `action: ${action}`,
+//       });
+//     },
+//   }).then(() => {
+//       roleAuthVisible.value = true
+//     })
+//     .catch(() => {
+//       ElMessage({
+//         type: 'info',
+//         message: 'Delete canceled',
+//       })
+//     })
+// };
 onMounted(() => {
   getRoleList();
 });

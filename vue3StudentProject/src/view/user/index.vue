@@ -47,7 +47,7 @@
         <el-input v-model="user.username" />
       </el-form-item>
       <el-form-item label="用户密码" prop="password">
-        <el-input v-model="user.password" />
+        <el-input type="password" v-model="user.password" />
       </el-form-item>
       <el-form-item label="真实姓名" prop="name">
         <el-input v-model="user.name" />
@@ -100,13 +100,10 @@ let roleStore = useRoleStore();
 let userStore = useUserStore();
 const users = ref<userInfoData[] | undefined>();
 
-const getUserList = () => {
-  userStore
-    .getUserList({ page: currentPage.value, size: pageSize.value })
-    .then((res) => {
-      users.value = userStore.users;
-      total.value = res?.total as number;
-    });
+const getUserList = async () => {
+  const res = await userStore.getUserList({ page: currentPage.value, size: pageSize.value });
+  users.value = userStore.users;
+  total.value = res?.total as number;
 };
 let roleOptions = ref<roleInfoData[] | undefined>([]);
 const getRoleList = () => {
@@ -265,12 +262,35 @@ let addData = (formEl: FormInstance | undefined) => {
   }
   formEl.validate(async (valid) => {
     if (valid) {
-      try {
+     try {
+        // 保存当前页码用于后续计算
+        const oldPage = currentPage.value;
+
         userStore.addUser(user.value).then(() => {
           userFormVisible.value = false;
-          getUserList();
+
+          // 先获取最新数据（含更新后的total）
+          getUserList().then(() => {
+            // 计算最大页码
+            const maxPage = Math.ceil(total.value / pageSize.value);
+
+            // 智能调整页码逻辑
+            if (oldPage === maxPage) {
+              // 如果之前就在最后一页，保持当前页
+              currentPage.value = maxPage;
+            } else if (oldPage > maxPage) {
+              // 如果新增导致总页数减少（如刚好满页时新增）
+              currentPage.value = maxPage;
+            }
+            // 其他情况保持当前页码
+
+            // 强制刷新数据（考虑分页边界情况）
+            getUserList();
+          });
         });
-      } catch (error) {}
+      } catch (error) {
+        ElMessage.error("添加失败");
+      }
     } else {
     }
   });

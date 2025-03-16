@@ -28,22 +28,41 @@
       </el-form-item>
     </el-form>
   </div>
-  <el-table :data="classes" style="width: 100%" height="380px" border>
-    <el-table-column type="index" width="60" label="序号" />
-    <el-table-column property="classname" label="班级名称" />
-    <el-table-column property="teacher_id" label="授课教师" :formatter="resetTeacher" />
-    <el-table-column property="manager_id" label="学管" :formatter="resetManager" />
-    <el-table-column label="操作">
-      <template #default="scope">
-        <el-button type="success" size="small" @click="handleEdit(scope.row._id)">
-          编辑
-        </el-button>
-        <el-button type="danger" size="small" @click="handleDelete(scope.row._id)">
-          删除
-        </el-button>
-      </template>
-    </el-table-column>
-  </el-table>
+  <div v-if="classes">
+    <el-table :data="classes" style="width: 100%" height="380px" border>
+      <el-table-column type="index" width="60" label="序号" />
+      <el-table-column property="classname" label="班级名称" />
+      <el-table-column
+        property="teacher_id"
+        label="授课教师"
+        :formatter="resetTeacher"
+      />
+      <el-table-column
+        property="manager_id"
+        label="学管"
+        :formatter="resetManager"
+      />
+      <el-table-column label="操作">
+        <template #default="scope">
+          <el-button
+            type="success"
+            size="small"
+            @click="handleEdit(scope.row._id)"
+          >
+            编辑
+          </el-button>
+          <el-button
+            type="danger"
+            size="small"
+            @click="handleDelete(scope.row._id)"
+          >
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
+  <!-- <div v-else>数据加载中...</div> -->
   <el-pagination
     v-model:current-page="currentPage"
     v-model:page-size="pageSize"
@@ -84,7 +103,9 @@
       <div class="dialog-footer">
         <el-button
           @click="
-            updateClass._id == null ? addData(classFormRef) : updateData(classFormRef)
+            updateClass._id == null
+              ? addData(classFormRef)
+              : updateData(classFormRef)
           "
           >确定</el-button
         >
@@ -185,12 +206,21 @@ let addData = (formEL: FormInstance | undefined) => {
   }
   formEL.validate(async (valid) => {
     if (valid) {
-      try {
-        classStore.addClass(updateClass.value).then(() => {
-          classFormVisible.value = false;
-          getClassList();
-        });
-      } catch (error) {}
+      const oldPage = currentPage.value;
+      classStore.addClass(updateClass.value).then(() => {
+        classFormVisible.value = false;
+
+        getClassList();
+        const maxPage = Math.ceil(total.value / pageSize.value);
+
+        // 智能调整逻辑
+        if (oldPage === maxPage || oldPage > maxPage) {
+          currentPage.value = maxPage;
+        }
+
+        // 数据可能发生变化，强制刷新
+        getClassList();
+      });
     } else {
     }
   });

@@ -55,100 +55,102 @@
       </el-form-item>
     </el-form>
   </div>
+  <div v-if="students">
+    <el-table :data="students" style="width: 100%" height="380px" border>
+      <el-table-column type="expand">
+        <template #default="props">
+          <div>
+            <p>学生姓名: {{ props.row.name }}</p>
+            <p>性别: {{ dataFilter(props.row.gender, genderOptions) }}</p>
+            <p>所在学校: {{ props.row.school }}</p>
+            <p>专业: {{ props.row.student }}</p>
+            <p>年级: {{ dataFilter(props.row.grade, gradeOptions) }}</p>
+            <p>学历: {{ dataFilter(props.row.education, educationOptions) }}</p>
+            <p>
+              学习方向: {{ dataFilter(props.row.direction, directionOptions) }}
+            </p>
+            <p>身份证号码: {{ props.row.id_number }}</p>
+            <p>电话号码: {{ props.row.phone }}</p>
+            <p>家长姓名: {{ props.row.parent }}</p>
+            <p>家长联系电话: {{ props.row.parent_phone }}</p>
+            <p>家庭住址: {{ props.row.address }}</p>
+            <p>QQ号码: {{ props.row.qq }}</p>
+            <p>所在班级: {{ classFilter(props.row.class, classOptions) }}</p>
+            <p>入学时间: {{ props.row.admission_date }}</p>
+            <p>
+              授课教师: {{ dataFilter(props.row.teacher_id, teacherOptions) }}
+            </p>
+            <p>学管: {{ dataFilter(props.row.manager_id, managerOptions) }}</p>
+            <p>
+              照片:
+              <el-image
+                v-for="(item, index) in props.row.pictures"
+                :key="index"
+                style="width: 100px; height: 100px"
+                :src="baseApi + '/upload/' + item"
+                :zoom-rate="1.2"
+                :max-scale="7"
+                :min-scale="0.2"
+                :preview-src-list="getSrcList(props.row.pictures)"
+                :initial-index="4"
+                fit="cover"
+              />
+            </p>
+            <p>备注信息:<span v-html="props.row.note"> </span></p>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column type="index" width="60" label="序号" />
+      <el-table-column label="学生姓名" prop="name" width="100px" />
+      <el-table-column label="性别" prop="gender" width="100px">
+        <template #default="scope">
+          {{ dataFilter(scope.row.gender, genderOptions) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="学习方向" prop="direction">
+        <template #default="scope">
+          {{ dataFilter(scope.row.direction, directionOptions) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="电话号码" prop="phone" />
+      <el-table-column label="所在班级" prop="class">
+        <template #default="scope">
+          {{ classFilter(scope.row.class, classOptions) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="授课教师" prop="teacher_id">
+        <template #default="scope">
+          {{ dataFilter(scope.row.teacher_id, teacherOptions) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="学管" prop="manager_id">
+        <template #default="scope">
+          {{ dataFilter(scope.row.manager_id, managerOptions) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="入学时间" prop="admission_date" />
+      <el-table-column label="操作">
+        <template #default="scope">
+          <el-button
+            type="success"
+            size="small"
+            @click="handleEdit(scope.row._id)"
+          >
+            编辑
+          </el-button>
 
-  <el-table :data="students" style="width: 100%" height="380px" border>
-    <el-table-column type="expand">
-      <template #default="props">
-        <div>
-          <p>学生姓名: {{ props.row.name }}</p>
-          <p>性别: {{ dataFilter(props.row.gender, genderOptions) }}</p>
-          <p>所在学校: {{ props.row.school }}</p>
-          <p>专业: {{ props.row.student }}</p>
-          <p>年级: {{ dataFilter(props.row.grade, gradeOptions) }}</p>
-          <p>学历: {{ dataFilter(props.row.education, educationOptions) }}</p>
-          <p>
-            学习方向: {{ dataFilter(props.row.direction, directionOptions) }}
-          </p>
-          <p>身份证号码: {{ props.row.id_number }}</p>
-          <p>电话号码: {{ props.row.phone }}</p>
-          <p>家长姓名: {{ props.row.parent }}</p>
-          <p>家长联系电话: {{ props.row.parent_phone }}</p>
-          <p>家庭住址: {{ props.row.address }}</p>
-          <p>QQ号码: {{ props.row.qq }}</p>
-          <p>所在班级: {{ classFilter(props.row.class, classOptions) }}</p>
-          <p>入学时间: {{ props.row.admission_date }}</p>
-          <p>
-            授课教师: {{ dataFilter(props.row.teacher_id, teacherOptions) }}
-          </p>
-          <p>学管: {{ dataFilter(props.row.manager_id, managerOptions) }}</p>
-          <p>
-            照片:
-            <el-image
-              v-for="(item, index) in props.row.pictures"
-              :key="index"
-              style="width: 100px; height: 100px"
-              :src="baseApi + '/upload/' + item"
-              :zoom-rate="1.2"
-              :max-scale="7"
-              :min-scale="0.2"
-              :preview-src-list="getSrcList(props.row.pictures)"
-              :initial-index="4"
-              fit="cover"
-            />
-          </p>
-          <p>备注信息:<span v-html="props.row.note"> </span></p>
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column type="index" width="60" label="序号" />
-    <el-table-column label="学生姓名" prop="name" width="100px" />
-    <el-table-column label="性别" prop="gender" width="100px">
-      <template #default="scope">
-        {{ dataFilter(scope.row.gender, genderOptions) }}
-      </template>
-    </el-table-column>
-    <el-table-column label="学习方向" prop="direction">
-      <template #default="scope">
-        {{ dataFilter(scope.row.direction, directionOptions) }}
-      </template>
-    </el-table-column>
-    <el-table-column label="电话号码" prop="phone" />
-    <el-table-column label="所在班级" prop="class">
-      <template #default="scope">
-        {{ classFilter(scope.row.class, classOptions) }}
-      </template>
-    </el-table-column>
-    <el-table-column label="授课教师" prop="teacher_id">
-      <template #default="scope">
-        {{ dataFilter(scope.row.teacher_id, teacherOptions) }}
-      </template>
-    </el-table-column>
-    <el-table-column label="学管" prop="manager_id">
-      <template #default="scope">
-        {{ dataFilter(scope.row.manager_id, managerOptions) }}
-      </template>
-    </el-table-column>
-    <el-table-column label="入学时间" prop="admission_date" />
-    <el-table-column label="操作">
-      <template #default="scope">
-        <el-button
-          type="success"
-          size="small"
-          @click="handleEdit(scope.row._id)"
-        >
-          编辑
-        </el-button>
-
-        <el-button
-          type="danger"
-          size="small"
-          @click="handleDelete(scope.row._id)"
-        >
-          删除
-        </el-button>
-      </template>
-    </el-table-column>
-  </el-table>
+          <el-button
+            type="danger"
+            size="small"
+            @click="handleDelete(scope.row._id)"
+          >
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
+  <!-- <div v-else>数据加载中...</div> -->
   <el-pagination
     v-model:current-page="currentPage"
     v-model:page-size="pageSize"
@@ -331,7 +333,6 @@ interface FilterData {
 
 let handleEdit = (_id: string) => {
   $router.push(`/student/update/${_id}`);
-
 };
 let handleDelete = (_id: string) => {
   ElMessageBox.confirm("你确定删除吗", "Warning", {

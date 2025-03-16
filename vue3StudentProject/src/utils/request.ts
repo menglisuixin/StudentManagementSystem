@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ElMessage,ElLoading,ElNotification } from "element-plus";
+import { ElMessage, ElLoading, ElNotification } from "element-plus";
 import useUserStore from "@/store/modules/user";
 
 let request = axios.create({
@@ -50,16 +50,19 @@ const getMenus = () => {
   }
 };
 // 请求拦截器
-request.interceptors.request.use((config) => {
-  if (config.url != "/menus" && config.url != "/login") {
-    loading.open();
-    getMenus();
+request.interceptors.request.use(
+  (config) => {
+    if (config.url != "/menus" && config.url != "/login") {
+      loading.open();
+      getMenus();
+    }
+    return config;
+  },
+  (error) => {
+    loading.close();
+    return Promise.reject(error);
   }
-  return config;
-}, (error) => {
-  loading.close();
-  return Promise.reject(error);
-});
+);
 // 响应拦截器
 request.interceptors.response.use(
   (response) => {
@@ -72,7 +75,7 @@ request.interceptors.response.use(
         type: "warning",
       });
     }
-  loading.close();
+    loading.close();
     return response.data;
   },
   (error) => {
@@ -111,7 +114,7 @@ let loading = {
       this.loadingInstance = ElLoading.service({
         text: "拼命加载中...",
         background: "rgba(0, 0, 0, 0.5)",
-        // target:'.main'
+        target:'.main'
       });
     }
   },
@@ -122,5 +125,5 @@ let loading = {
     }
     this.loadingInstance = null;
   },
-}
+};
 export default request;
