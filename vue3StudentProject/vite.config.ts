@@ -19,6 +19,7 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
         "@": path.resolve("./src"),
       },
     },
+    // 利用服务器间不存在跨域
     server: {
       proxy: {
         [env.VITE_APP_BASE_API]: {
