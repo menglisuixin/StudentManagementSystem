@@ -4,7 +4,7 @@ import useUserStore from "./store/modules/user";
 
 let userStore = useUserStore(pinia);
 // 路由守卫钩子函数
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const user = userStore.user;
   if (user && user._id) {
     if (to.path == "/login" || to.path == "/404") {

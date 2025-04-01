@@ -28,7 +28,7 @@
       </el-form-item>
     </el-form>
   </div>
-  <div v-if="classes">
+  <div>
     <el-table :data="classes" style="width: 100%" height="380px" border>
       <el-table-column type="index" width="60" label="序号" />
       <el-table-column property="classname" label="班级名称" />
