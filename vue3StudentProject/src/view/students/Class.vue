@@ -302,9 +302,9 @@ let searchData = () => {
 };
 
 onMounted(() => {
-  getRoleList();
-  getUserList();
-  getClassList();
+  Promise.all([getRoleList(), getUserList()]).then(() => {
+    getClassList();
+  });
 });
 </script>
 <style scoped></style>

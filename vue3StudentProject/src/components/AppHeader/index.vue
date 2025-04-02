@@ -1,7 +1,9 @@
 <template>
   <div class="header">
     <a href="#">
-      <img class="logo" src="@/assets/vue.svg" alt="" />
+      <div class="container">
+        <img class="logo" src="@/assets/logo.png" alt="" />
+      </div>
       <span class="company">学员管理系统</span>
     </a>
     <el-dropdown @command="handleCommand">
@@ -150,10 +152,21 @@ let handlePwd = () => {
 };
 </script>
 <style scoped>
+.container {
+  display: inline-block;
+  align-items: center;
+  padding: 0 10px 0 40px;
+}
 .logo {
   vertical-align: middle;
-  padding: 0 10px 0 40px;
   width: 20px;
+  height: 20px;
+  animation: rotate 2s linear infinite;
+}
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
 }
 .company {
   position: absolute;

@@ -408,10 +408,9 @@ const getSrcList = (imgList: string[]) => {
 };
 
 onMounted(() => {
-  getRoleList();
-  getUserList();
-  getClassList();
-  getStudentList();
+  Promise.all([getRoleList(), getUserList(), getClassList()]).then(() => {
+    getStudentList();
+  });
 });
 </script>
 <style scoped></style>
