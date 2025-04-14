@@ -25,7 +25,7 @@ let $route = useRoute();
 let menuNodes: any[] = [];
 const hashAuth = (item: MenuData) => {
   const { index, isPublic } = item;
-  const menus = userStore.user?.role.menus;
+  const menus = userStore.user?.role?.menus;
   const username = userStore.user?.username;
   // admin 所有权限
   if (username == "admin" || isPublic || menus?.indexOf(index) !== -1) {
