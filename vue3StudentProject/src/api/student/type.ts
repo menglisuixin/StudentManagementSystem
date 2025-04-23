@@ -18,6 +18,7 @@ export interface studentInfoData {
   admission_date?: string; //入学时间
   teacher_id: string; //教师id
   manager_id: string; //学管id
+  student_id: string;
   pictures?: string[]; //照片数组
   note?: string; //备注信息
   __v?: number;

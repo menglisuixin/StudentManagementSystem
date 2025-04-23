@@ -11,8 +11,22 @@
       :rules="rules"
       ref="studentFormRef"
     >
-      <el-form-item label="姓名" prop="name">
+      <!-- <el-form-item label="姓名" prop="name">
         <el-input v-model="updateStudent.name" />
+      </el-form-item> -->
+      <el-form-item label="姓名" prop="student_id">
+        <el-select
+          v-model="updateStudent.student_id"
+          class="filter-item"
+          placeholder="请点击选择"
+        >
+          <el-option
+            v-for="option in studentOptions"
+            :key="option._id"
+            :label="option.name"
+            :value="option._id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="性别" prop="gender">
         <el-select
@@ -264,6 +278,7 @@ const updateStudent = ref<studentInfoData>({
   admission_date: "", //入学时间
   teacher_id: "", //教师id
   manager_id: "", //学管id
+  student_id: "",
   pictures: [], //照片数组
   note: "", //备注信息
 });
@@ -370,6 +385,7 @@ let schoolStore = useSchoolStore();
 let studentStore = useStudentStore();
 let teacherOptions = ref<roleInfoData[] | undefined>([]);
 let managerOptions = ref<roleInfoData[] | undefined>([]);
+let studentOptions = ref<userInfoData[] | undefined>([]);
 let classOptions = ref<classInfoData[] | undefined>([]);
 let roleOptions = ref<roleInfoData[] | undefined>([]);
 let userOptions = ref<userInfoData[] | undefined>([]);
@@ -449,6 +465,7 @@ let directionOptions = ref<FilterData[]>([
 ]);
 let teacher_role_id = ref<string | undefined>("");
 let manager_role_id = ref<string | undefined>("");
+let student_role_id = ref<string | undefined>("");
 const getUserList = () => {
   userStore.getUserAll().then(() => {
     userOptions.value = userStore.users;
@@ -457,6 +474,8 @@ const getUserList = () => {
         teacherOptions.value?.push(item);
       } else if (item.role_id == manager_role_id.value) {
         managerOptions.value?.push(item);
+      } else if (item.role_id === student_role_id.value) {
+        studentOptions.value?.push(item);
       }
     });
   });
@@ -469,6 +488,9 @@ const getRoleList = () => {
         teacher_role_id.value = item._id;
       } else if (item.name == "学管") {
         manager_role_id.value = item._id;
+      } else if (item.name === "学生") {
+        // 获取学生角色的 ID
+        student_role_id.value = item._id;
       }
     });
   });

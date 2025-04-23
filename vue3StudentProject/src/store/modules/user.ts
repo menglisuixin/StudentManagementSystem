@@ -65,6 +65,7 @@ let useUserStore = defineStore("user", {
       let result: loginResponseData = await reqUserAdd(data);
       if (result.status == 0) {
         this.users.push(result.data as userInfoData);
+        // await this.getUserAll();
         return "OK";
       } else {
         return Promise.reject(new Error(result.msg));
