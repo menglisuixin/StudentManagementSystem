@@ -65,7 +65,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, nextTick, onMounted } from "vue";
-import { ElMessage, ElTable } from "element-plus";
+import { ElMessage, ElTable, ElMessageBox } from "element-plus";
 import { formateDate } from "@/utils/dateUtils";
 import type { roleInfoData } from "@/api/role/type";
 import type { FormInstance, FormRules } from "element-plus";
@@ -101,7 +101,31 @@ let addData = (formEl: FormInstance | undefined) => {
           type: "success",
           message: `添加角色${roleForm.name}成功`,
         });
-        // open();
+
+        // 弹出确认对话框
+        ElMessageBox.confirm(
+          "是否为当前角色添加权限",
+          {
+            confirmButtonText: "确认",
+            cancelButtonText: "稍后设置",
+          }
+        )
+          .then(() => {
+            // 重新获取角色列表后查找新添加的角色
+            roleStore.roleList().then(() => {
+              const newRole = roleList.value?.find(role => role.name === roleForm.name);
+              if (newRole) {
+                currentRow.value = newRole;
+                roleAuthVisible.value = true;
+              }
+            });
+          })
+          .catch(() => {
+            ElMessage({
+              type: 'info',
+              message: '稍后设置权限',
+            });
+          });
       });
     }
   });
@@ -175,28 +199,7 @@ const getRoleList = () => {
     roleList.value = roleStore.roles;
   });
 };
-// const open = () => {
-//   ElMessageBox.confirm(
-//     "是否为当前角色添加权限",
-//     {
-//     confirmButtonText: "确认",
-//     cancelButtonText: "稍后设置",
-//     callback: (action: Action) => {
-//       ElMessage({
-//         type: "info",
-//         message: `action: ${action}`,
-//       });
-//     },
-//   }).then(() => {
-//       roleAuthVisible.value = true
-//     })
-//     .catch(() => {
-//       ElMessage({
-//         type: 'info',
-//         message: 'Delete canceled',
-//       })
-//     })
-// };
+
 onMounted(() => {
   getRoleList();
 });

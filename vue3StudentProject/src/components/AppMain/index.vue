@@ -32,11 +32,11 @@ const handleToggle = () => {
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  background-color: #545c6482;
+  background-color: #545c646f;
   color: #fff;
   border: none;
   cursor: pointer;
   border-radius:0 20px 20px 0 ;
-  z-index: 1;
+  z-index: 10;
 }
 </style>
