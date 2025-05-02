@@ -13,6 +13,7 @@
       :options="chartOptions"
       height="500px"
       :key="year"
+      class="bar"
     />
   </div>
 </template>
@@ -95,3 +96,6 @@ onMounted(() => {
   getMsg();
 });
 </script>
+<style scoped>
+
+</style>
