@@ -325,6 +325,7 @@ let student = ref<studentInfoData>({
   class: "",
   teacher_id: "",
   manager_id: "",
+  student_id: "",
 });
 interface FilterData {
   _id: string;
@@ -375,6 +376,7 @@ let handleAdd = () => {
     class: "",
     teacher_id: "",
     manager_id: "",
+    student_id: "",
   };
   studentFormVisible.value = true;
   nextTick(() => {
