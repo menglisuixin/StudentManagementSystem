@@ -15,7 +15,7 @@
       </template>
     </el-menu-item>
     <!-- 有子项显示 -->
-    <el-sub-menu v-if="item.children" :index="item.index">
+    <el-sub-menu v-if="hasValidChildren(item)" :index="item.index">
       <template #title>
         <el-icon>
           <component :is="item.icon"></component>
@@ -30,6 +30,11 @@
 export default {
   name: "Menu",
   props: ["menuList"],
+  computed: {
+    hasValidChildren() {
+      return (item: any) => item.children && item.children.length > 0;
+    },
+  },
 };
 </script>
 <style scoped></style>

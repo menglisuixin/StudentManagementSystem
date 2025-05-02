@@ -11,11 +11,11 @@ let router = createRouter({
       path: "/",
       component: () => import("@/view/layout/index.vue"),
       name: "layout",
-      redirect: "/home",
+      redirect: '/home',
       children: [
         {
           path: "/home",
-          component: () => import("@/view/home/index.vue"),
+          component: () => import("@/view/Toggle.vue"),
           //
           meta: { title: "首页" },
         },
@@ -51,7 +51,8 @@ let router = createRouter({
         },
         {
           path: "/student/update/:id",
-          component: () => import("@/view/students/components/StudentUpdate.vue"),
+          component: () =>
+            import("@/view/students/components/StudentUpdate.vue"),
           meta: { title: "学生添加/编辑" },
         },
       ],

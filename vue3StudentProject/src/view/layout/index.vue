@@ -1,43 +1,61 @@
 <template>
-  <div>
-    <appHeader></appHeader>
-    <appMain></appMain>
-    <appNavBar></appNavBar>
+  <div class="grid-container">
+    <appHeader class="header"></appHeader>
+    <appNavBar
+      class="navbar"
+      :style="{ width: isNavbarOpen ? '230px' : '0' }"
+    >
+    </appNavBar>
+    <appMain
+      class="main"
+      :isNavbarOpen="isNavbarOpen"
+      @toggleNavbar="toggleNavbar"
+    ></appMain>
   </div>
 </template>
+
 <script setup lang="ts">
+import { ref } from "vue";
 import appHeader from "@/components/AppHeader/index.vue";
 import appMain from "@/components/AppMain/index.vue";
 import appNavBar from "@/components/AppNavBar/index.vue";
+
+const isNavbarOpen = ref(true);
+
+const toggleNavbar = () => {
+  isNavbarOpen.value = !isNavbarOpen.value;
+};
 </script>
+
 <style scoped>
+.grid-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 50px 1fr;
+  grid-template-areas:
+    "header header"
+    "navbar main";
+  height: 100vh;
+}
+
 .header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 0;
+  grid-area: header;
   line-height: 50px;
   background-color: #2d3a4b;
 }
+
 .navbar {
-  position: absolute;
-  top: 50px;
-  left: 0;
-  bottom: 0;
-  padding: 0;
-  width: 230px;
+  grid-area: navbar;
   overflow-y: auto;
   background-color: #545c64;
+  transition: width 0.3s;
+  overflow-x: hidden; 
 }
+
 .main {
-  position: absolute;
-  top: 50px;
-  left: 230px;
-  right: 0;
-  bottom: 0;
+  grid-area: main;
   padding: 10px;
   overflow-y: auto;
-  /* background-color: #3c4b5a; */
+  position: relative; /* 添加相对定位，以便按钮定位 */
 }
 </style>
