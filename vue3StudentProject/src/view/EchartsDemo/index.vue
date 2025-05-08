@@ -109,15 +109,32 @@ const handleResize = () => {
   chartInstance.value?.resize()
 }
 
+// 监听容器宽度变化
+let resizeObserver: ResizeObserver | null = null;
+const observeResize = () => {
+  if (chartContainer.value) {
+    resizeObserver = new ResizeObserver(() => {
+      handleResize();
+    });
+    resizeObserver.observe(chartContainer.value);
+  }
+};
+
+const unobserveResize = () => {
+  resizeObserver?.disconnect();
+};
+
 // 生命周期钩子
 onMounted(() => {
   nextTick(initChart)
   window.addEventListener('resize', handleResize)
+  observeResize();
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
   chartInstance.value?.dispose()
+  unobserveResize();
 })
 
 // 监听配置项变化
