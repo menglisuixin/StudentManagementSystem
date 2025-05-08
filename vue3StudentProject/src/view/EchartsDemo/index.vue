@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { shallowRef, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import * as echarts from 'echarts'
 import type { ECharts, EChartsOption } from 'echarts'
 import { getMapOptions } from './map-presets'
@@ -34,8 +34,8 @@ const props = withDefaults(defineProps<Props>(), {
   mapPresetType: 'flight'
 })
 
-const chartContainer = ref<HTMLElement | null>(null)
-const chartInstance = ref<ECharts | null>(null)
+const chartContainer = shallowRef<HTMLElement | null>(null)
+const chartInstance = shallowRef<ECharts | null>(null)
 
 // 初始化图表
 const initChart = async () => {

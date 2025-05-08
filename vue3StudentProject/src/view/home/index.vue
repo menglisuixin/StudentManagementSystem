@@ -97,5 +97,7 @@ onMounted(() => {
 });
 </script>
 <style scoped>
-
+  .bar{
+    overflow: hidden;
+  }
 </style>
