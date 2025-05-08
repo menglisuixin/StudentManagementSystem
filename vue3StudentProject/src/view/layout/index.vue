@@ -28,7 +28,6 @@ const toggleNavbar = () => {
   isNavbarOpen.value = !isNavbarOpen.value;
   // 将状态存入 localStorage
   localStorage.setItem('isNavbarOpen', isNavbarOpen.value.toString());
-
 };
 
 onMounted(() => {

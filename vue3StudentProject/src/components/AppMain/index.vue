@@ -36,7 +36,7 @@ const handleToggle = () => {
   color: #fff;
   border: none;
   cursor: pointer;
-  border-radius:0 20px 20px 0 ;
+  border-radius: 0 20px 20px 0;
   z-index: 10;
 }
 </style>
