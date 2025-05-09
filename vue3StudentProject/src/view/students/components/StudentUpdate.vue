@@ -14,17 +14,23 @@
       <!-- <el-form-item label="姓名" prop="name">
         <el-input v-model="updateStudent.name" />
       </el-form-item> -->
-      <el-form-item label="姓名" prop="student_id">
+      <!--
+      用v-model绑定updateStudent.name属性，
+      提交表单用的是updateStudent对象，
+      所以从这里取数据
+       -->
+      <el-form-item label="姓名">
         <el-select
-          v-model="updateStudent.student_id"
+          v-model="updateStudent.name"
           class="filter-item"
           placeholder="请点击选择"
         >
+          <!-- value取名字 -->
           <el-option
             v-for="option in studentOptions"
             :key="option._id"
             :label="option.name"
-            :value="option._id"
+            :value="option.name"
           />
         </el-select>
       </el-form-item>
@@ -581,6 +587,8 @@ let addData = (formEl: FormInstance | undefined) => {
   }
   formEl.validate(async (valid) => {
     if (valid) {
+      console.log(updateStudent.value);
+
       updateStudent.value.pictures = getImgs();
       studentStore.addStudent(updateStudent.value).then(() => {
         $router.replace("/student");

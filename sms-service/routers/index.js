@@ -485,6 +485,7 @@ router.post("/manage/student/list", (req, res) => {
 });
 // 添加学员
 router.post("/manage/student/add", (req, res) => {
+  console.log(req.body);
   StudentModel.create({ ...req.body })
     .then((data) => {
       res.send({ status: 0, data });
