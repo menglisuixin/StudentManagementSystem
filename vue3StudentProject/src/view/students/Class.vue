@@ -73,7 +73,11 @@
     @current-change="handleCurrentChange"
     style="display: flex; justify-content: center; align-items: center"
   />
-  <el-dialog v-model="classFormVisible" title="添加班级" width="500">
+  <el-dialog
+    v-model="classFormVisible"
+    :title="dialogTitle"
+    width="500"
+    >
     <el-form :model="updateClass" :rules="rules" ref="classFormRef">
       <el-form-item label="班级名称:" prop="classname">
         <el-input v-model="updateClass.classname" />
@@ -124,6 +128,7 @@ import { roleInfoData } from "@/api/role/type";
 import { userInfoData } from "@/api/user/type";
 import useRoleStore from "@/store/modules/role";
 import useUserStore from "@/store/modules/user";
+const dialogTitle = ref("");
 const getClassList = () => {
   classStore
     .getClassList({ page: currentPage.value, size: pageSize.value, searchMap })
@@ -163,6 +168,7 @@ let handleEdit = (_id: string) => {
   classStore.getClassById(_id).then((res) => {
     updateClass.value = res as classInfoData;
   });
+  dialogTitle.value = "编辑班级";
 };
 let updateData = (formEL: FormInstance | undefined) => {
   if (!formEL) {
@@ -233,6 +239,7 @@ let handleAdd = () => {
     manager_id: "",
   };
   classFormVisible.value = true;
+  dialogTitle.value = "添加班级";
   nextTick(() => {
     classFormRef.value?.resetFields();
   });

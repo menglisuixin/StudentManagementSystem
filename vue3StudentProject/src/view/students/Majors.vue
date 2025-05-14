@@ -31,7 +31,7 @@
     style="display: flex; justify-content: center; align-items: center"
   />
   <!-- 弹出对话框 -->
-  <el-dialog v-model="majorFormVisible" title="添加专业" width="500">
+  <el-dialog v-model="majorFormVisible" :title="dialogTitle" width="500">
     <el-form
       :model="major"
       :rules="rules"
@@ -66,6 +66,7 @@ import {
   type FormRules,
 } from "element-plus";
 import { nextTick } from "vue";
+const dialogTitle = ref("");
 
 let majorStore = useMajorStore();
 const majors = ref<majorInfoData[] | undefined>();
@@ -84,6 +85,7 @@ let handleEdit = (_id: string) => {
   majorStore.getMajorById(_id).then((res) => {
     major.value = res as majorInfoData;
   });
+  dialogTitle.value = "编辑专业";
 };
 let updateData = (formEl: FormInstance | undefined) => {
   if (!formEl) {
@@ -167,6 +169,8 @@ let handleAdd = () => {
     majorname: "",
   };
   majorFormVisible.value = true;
+  dialogTitle.value = "添加专业";
+
   nextTick(() => {
     majorFormRef.value?.resetFields();
   });

@@ -33,7 +33,7 @@
     style="display: flex; justify-content: center; align-items: center"
   />
   <!-- 弹出对话框 -->
-  <el-dialog v-model="schoolFormVisible" title="添加学校" width="500">
+  <el-dialog v-model="schoolFormVisible" :title="dialogTitle" width="500">
     <el-form
       :model="school"
       :rules="rules"
@@ -70,7 +70,7 @@ import {
   type FormRules,
 } from "element-plus";
 import { nextTick } from "vue";
-
+const dialogTitle = ref("");
 let schoolStore = useSchoolStore();
 const schools = ref<schoolInfoData[] | undefined>();
 
@@ -88,6 +88,7 @@ let handleEdit = (_id: string) => {
   schoolStore.getSchoolById(_id).then((res) => {
     school.value = res as schoolInfoData;
   });
+  dialogTitle.value = "编辑学校";
 };
 let updateData = (formEl: FormInstance | undefined) => {
   if (!formEl) {
@@ -171,6 +172,7 @@ let handleAdd = () => {
     schoolname: "",
   };
   schoolFormVisible.value = true;
+  dialogTitle.value = "添加学校";
   nextTick(() => {
     schoolFormRef.value?.resetFields();
   });

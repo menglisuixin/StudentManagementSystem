@@ -8,7 +8,7 @@
         ></el-input>
       </el-form-item>
 
-      <el-form-item style="width: 150px">
+      <el-form-item style="width: 157px">
         <el-select v-model="searchMap.direction" placeholder="根据学习方向查询">
           <el-option
             v-for="item in directionOptions"

@@ -41,7 +41,7 @@
     style="display: flex; justify-content: center; align-items: center"
   />
   <!-- 弹出对话框 -->
-  <el-dialog v-model="userFormVisible" title="添加用户" width="500">
+  <el-dialog v-model="userFormVisible" :title="dialogTitle" width="500">
     <el-form :model="user" :rules="rules" ref="userFormRef" label-width="90px">
       <el-form-item label="用户名称" prop="username">
         <el-input v-model="user.username" />
@@ -95,13 +95,16 @@ import {
   type FormRules,
 } from "element-plus";
 import { nextTick } from "vue";
-
+const dialogTitle = ref("");
 let roleStore = useRoleStore();
 let userStore = useUserStore();
 const users = ref<userInfoData[] | undefined>();
 
 const getUserList = async () => {
-  const res = await userStore.getUserList({ page: currentPage.value, size: pageSize.value });
+  const res = await userStore.getUserList({
+    page: currentPage.value,
+    size: pageSize.value,
+  });
   users.value = userStore.users;
   total.value = res?.total as number;
 };
@@ -130,6 +133,7 @@ let handleEdit = (_id: string) => {
     console.log(res);
     user.value = res as userInfoData;
   });
+  dialogTitle.value = "编辑用户";
   // console.log(_id);
 };
 let updateData = (formEl: FormInstance | undefined) => {
@@ -262,7 +266,7 @@ let addData = (formEl: FormInstance | undefined) => {
   }
   formEl.validate(async (valid) => {
     if (valid) {
-     try {
+      try {
         // 保存当前页码用于后续计算
         const oldPage = currentPage.value;
 
@@ -305,6 +309,7 @@ let handleAdd = () => {
     role_id: "",
   };
   userFormVisible.value = true;
+  dialogTitle.value = "添加用户";
   nextTick(() => {
     userFormRef.value?.resetFields();
   });
