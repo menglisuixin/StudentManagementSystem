@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   useMapPreset: false,
   mapPresetType: "flight",
 });
-
+// 只有覆盖.value的时候才触发，当你不希望这个值不重新复用的时候使用
 const chartContainer = shallowRef<HTMLElement | null>(null);
 const chartInstance = shallowRef<ECharts | null>(null);
 
