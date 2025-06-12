@@ -54,7 +54,6 @@ const getMenus = () => {
           });
         } else {
           // 权限列表长度不一致，执行权限变更处理
-          userStore.removeUser();
           msgText();
         }
       }

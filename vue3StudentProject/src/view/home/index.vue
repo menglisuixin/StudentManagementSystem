@@ -22,14 +22,27 @@
 import { onMounted, ref, reactive, watch } from "vue";
 import { reqStudentForYear } from "@/api/student";
 import { ArrowLeft, ArrowRight } from "@element-plus/icons-vue";
-import EchartsDemo from '../EchartsDemo/index.vue';
+import EchartsDemo from "../EchartsDemo/index.vue";
 
 const year = ref(new Date().getFullYear());
 // 使用reactive创建图表配置对象
 const chartOptions = reactive({
   xAxis: {
     type: "category",
-    data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+    data: [
+      "1月",
+      "2月",
+      "3月",
+      "4月",
+      "5月",
+      "6月",
+      "7月",
+      "8月",
+      "9月",
+      "10月",
+      "11月",
+      "12月",
+    ],
   },
   yAxis: {
     type: "value",
@@ -39,8 +52,8 @@ const chartOptions = reactive({
     axisLabel: {
       formatter: function (value: number) {
         return Math.round(value);
-      }
-    }
+      },
+    },
   },
   series: [
     {
@@ -77,10 +90,11 @@ const getNextYearData = () => {
 // 获取数据的方法
 const getMsg = () => {
   reqStudentForYear(year.value).then((res) => {
-    if (res.status == '0') {
+    console.log(res);
+    if (res.status == "0") {
       let dataArr = Array(12).fill(0); // 创建一个长度为12的数组并填充0
 
-      if(res.data && res.data.length) {
+      if (res.data && res.data.length) {
         res.data.forEach((item) => {
           dataArr[parseInt(item._id) - 1] = item.count;
         });
@@ -97,7 +111,7 @@ onMounted(() => {
 });
 </script>
 <style scoped>
-  .bar{
-    overflow: hidden;
-  }
+.bar {
+  overflow: hidden;
+}
 </style>
