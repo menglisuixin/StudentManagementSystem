@@ -4,7 +4,7 @@
 
 - 用户在登录页面输入用户名和密码
 - 点击登录按钮触发`onSubmit`函数
-- 表单验证通过后调用`userStore.userLogin(form)`方法
+- 通过 el-form 组件的自定义表单的自定义校验方法，验证通过后调用`userStore.userLogin(form)`方法
 
 #### 2. 前端发送登录请求
 
@@ -43,7 +43,7 @@ async userLogin(data: loginFormData) {
 
 #### 5. 前端处理响应
 
-- 登录成功后，前端将完整的用户对象存储在 localStorage 中
+- 登录成功后，前端将完整的用户对象通过 pinia 存储在 localStorage 中
 - 未使用 JWT token，而是直接通过角色 ID 和权限列表进行权限控制
 - 前端后续请求通过请求头携带角色 ID（而非 JWT token）
 
@@ -57,7 +57,7 @@ async userLogin(data: loginFormData) {
   }
   ```
 - `getMenus()`函数会向后端发送角色 ID，获取最新权限列表
-- 通过比较本地存储的权限与后端返回的权限是否一致，实现权限控制
+- 通过比较本地存储的权限与后端返回的权限是否一致，实现权限控制，解决如果权限被修改后将被修改的用户踢下线
 
 #### 7. 数据流向总结
 
@@ -105,6 +105,7 @@ export const getRoleList = () =>
 - 该方法发送 POST 请求到后端`/manage/role/add`接口
 - 后端创建新角色并返回结果
 - 前端刷新角色列表
+- 通过nexttick进行异步显示，数据更改但是页面没更新，手动调用nexttick，确保数据获取的是最新的
 
 #### 6. 编辑角色
 

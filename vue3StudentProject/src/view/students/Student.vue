@@ -189,6 +189,7 @@ let managerOptions = ref<roleInfoData[] | undefined>([]);
 let classOptions = ref<classInfoData[] | undefined>([]);
 let roleOptions = ref<roleInfoData[] | undefined>([]);
 let userOptions = ref<userInfoData[] | undefined>([]);
+// 根据后端返回的_id,手写过滤器，并显示对应的名字
 let genderOptions = ref<FilterData[]>([
   {
     _id: "0",

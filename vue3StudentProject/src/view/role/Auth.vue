@@ -46,7 +46,7 @@ let rules = reactive<FormRules>({
 });
 let authList = ref([]);
 let checkedKeys: any = reactive([]);
-
+// 确定之后校验
 let handleCheckChange = (data: tree, checked: boolean) => {
   if (checked) {
     if (data.index !== "/students" && checkedKeys.indexOf(data.index) == -1) {
@@ -65,6 +65,7 @@ let getMenus = () => {
   updateRole.menus = checkedKeys;
   return updateRole;
 };
+// 通过defineExpose, we can expose methods or properties to the parent component
 defineExpose({
   getMenus,
 });

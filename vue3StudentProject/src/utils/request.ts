@@ -5,6 +5,7 @@ import useUserStore from "@/store/modules/user";
 // 创建 axios 实例，配置基础 URL 和超时时间
 let request = axios.create({
   // baseURL: "/mock",
+  //  import.meta找本地的环境变量
   baseURL: import.meta.env.VITE_APP_BASE_API, // 从环境变量获取 API 基础 URL
   timeout: 5000, // 请求超时时间设置为 5 秒
 });
